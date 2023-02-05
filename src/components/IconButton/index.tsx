@@ -15,7 +15,7 @@ export function IconButton({
   ...props
 }: IconButtonProps) {
   return (
-    <Container disabled={isLoading || disabled} {...props}>
+    <Container disabled={isLoading || disabled} activeOpacity={0.6} {...props}>
       {isLoading ? <ActivityIndicator color="black" /> : children}
     </Container>
   )

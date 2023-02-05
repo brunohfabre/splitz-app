@@ -1,17 +1,23 @@
-import { SafeAreaView, ScrollView, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import Bell from '@assets/icons/Bell.svg'
+import Plus from '@assets/icons/Plus.svg'
+import Users from '@assets/icons/Users.svg'
+import Wallet from '@assets/icons/Wallet.svg'
 import { Avatar } from '@components/Avatar'
 import { Button } from '@components/Button'
+import { Footer } from '@components/Footer'
 import { IconButton } from '@components/IconButton'
-import { api } from '@lib/api'
+import { Text } from '@components/Text'
 import { useNavigation } from '@react-navigation/native'
+import { useBills } from '@services/bills'
+import { useFriendships } from '@services/friendships'
 import { useAuthStore } from '@stores/authStore'
-import { useQuery } from '@tanstack/react-query'
 import { getFirstAndLastName } from '@utils/getFirstAndLastName'
 
-import { Container, Footer, Header, UserContainer, UserName } from './styles'
+import { Shimmer } from './Shimmer'
+import { Container, Content, Header, UserContainer, UserName } from './styles'
 
 export function Dashboard() {
   const navigation = useNavigation()
@@ -21,14 +27,9 @@ export function Dashboard() {
 
   const userShortName = getFirstAndLastName(user.name)
 
-  const { data: splits, isLoading: isSplitsLoading } = useQuery(
-    ['splits'],
-    async () => {
-      const response = await api.get('/splits')
-
-      return response.data.splits
-    },
-  )
+  const { data: bills, isLoading: isBillsLoading } = useBills()
+  const { data: friendships, isLoading: isFriendshipsLoading } =
+    useFriendships()
 
   function handleNavigateToProfile() {
     navigation.navigate('profile')
@@ -39,19 +40,11 @@ export function Dashboard() {
   }
 
   function handleNavigateToBillValue() {
-    navigation.navigate('split-bill-value')
+    navigation.navigate('create-bill')
   }
 
   function handleNavigateToFriends() {
-    navigation.navigate('friends')
-  }
-
-  if (!splits && isSplitsLoading) {
-    return (
-      <View>
-        <Text>is loading</Text>
-      </View>
-    )
+    navigation.navigate('friendships')
   }
 
   return (
@@ -59,7 +52,7 @@ export function Dashboard() {
       <SafeAreaView>
         <Header>
           <UserContainer onPress={handleNavigateToProfile}>
-            <Avatar />
+            <Avatar sourceUri={user.avatarUrl} />
 
             <UserName>{userShortName}</UserName>
           </UserContainer>
@@ -70,36 +63,49 @@ export function Dashboard() {
         </Header>
       </SafeAreaView>
 
-      <ScrollView
-        style={{
-          flex: 1,
-        }}
-        contentContainerStyle={{
-          paddingHorizontal: 24,
-          paddingBottom: insets.bottom + 48 + 56,
-        }}
-      >
-        <Text>{JSON.stringify(splits, null, 2)}</Text>
-      </ScrollView>
+      {(!bills && isBillsLoading) || (!friendships && isFriendshipsLoading) ? (
+        <Shimmer />
+      ) : (
+        <>
+          <Content
+            contentContainerStyle={{
+              paddingBottom: insets.bottom + 48 + 56,
+            }}
+          >
+            <Text size="sm" style={{ color: '#A1A1A1' }}>
+              Your balance
+            </Text>
 
-      <Footer
-        style={{ paddingBottom: insets.bottom + 24 }}
-        colors={['rgba(255, 255, 255, 0)', '#ffffff']}
-      >
-        <Button
-          onPress={() => alert('handle press')}
-          style={{ flex: 1 }}
-          disabled
-        >
-          Bills
-        </Button>
-        <Button onPress={handleNavigateToBillValue} style={{ flex: 1 }}>
-          +
-        </Button>
-        <Button onPress={handleNavigateToFriends} style={{ flex: 1 }}>
-          Friends
-        </Button>
-      </Footer>
+            <Text size="sm" style={{ color: '#A1A1A1' }}>
+              Friends
+            </Text>
+
+            <Text size="sm">{JSON.stringify(friendships, null, 2)}</Text>
+
+            <Text size="sm" style={{ color: '#A1A1A1' }}>
+              Bills
+            </Text>
+
+            <Text size="sm">{JSON.stringify(bills, null, 2)}</Text>
+          </Content>
+
+          <Footer>
+            <Button
+              onPress={() => alert('handle press')}
+              style={{ flex: 1 }}
+              disabled
+            >
+              <Wallet />
+            </Button>
+            <Button onPress={handleNavigateToBillValue} style={{ flex: 1 }}>
+              <Plus />
+            </Button>
+            <Button onPress={handleNavigateToFriends} style={{ flex: 1 }}>
+              <Users />
+            </Button>
+          </Footer>
+        </>
+      )}
     </Container>
   )
 }

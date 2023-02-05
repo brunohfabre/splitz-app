@@ -27,8 +27,8 @@ type ContainerProps = {
   size: Size
 }
 
-export const Container = styled.View<ContainerProps>`
-  background-color: #d9d9d9;
+export const Container = styled.Image<ContainerProps>`
+  background-color: #f1f1f1;
 
   ${({ size }) => sizes[size]}
 `

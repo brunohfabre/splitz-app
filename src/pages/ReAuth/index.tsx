@@ -59,6 +59,8 @@ export function ReAuth() {
 
           authenticate()
           signIn({ token, user })
+        } catch (err) {
+          console.log(err)
         } finally {
           setIsLoading(false)
         }

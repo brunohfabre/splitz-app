@@ -1,3 +1,6 @@
+import { ComponentProps } from 'react'
+import { SafeAreaView } from 'react-native'
+
 import CaretLeft from '@assets/icons/CaretLeft.svg'
 import { Heading } from '@components/Heading'
 import { IconButton } from '@components/IconButton'
@@ -8,9 +11,13 @@ import { Container, TitleContainer } from './styles'
 type PageHeaderProps = {
   title: string
   showBackButton?: boolean
-}
+} & ComponentProps<typeof SafeAreaView>
 
-export function PageHeader({ title, showBackButton = true }: PageHeaderProps) {
+export function PageHeader({
+  title,
+  showBackButton = true,
+  ...props
+}: PageHeaderProps) {
   const navigation = useNavigation()
 
   function handleGoBack() {
@@ -18,16 +25,18 @@ export function PageHeader({ title, showBackButton = true }: PageHeaderProps) {
   }
 
   return (
-    <Container>
-      {showBackButton && (
-        <IconButton onPress={handleGoBack}>
-          <CaretLeft />
-        </IconButton>
-      )}
+    <SafeAreaView>
+      <Container {...props}>
+        {showBackButton && (
+          <IconButton onPress={handleGoBack}>
+            <CaretLeft />
+          </IconButton>
+        )}
 
-      <TitleContainer showBackButton={showBackButton}>
-        <Heading size="lg">{title}</Heading>
-      </TitleContainer>
-    </Container>
+        <TitleContainer showBackButton={showBackButton}>
+          <Heading size="lg">{title}</Heading>
+        </TitleContainer>
+      </Container>
+    </SafeAreaView>
   )
 }

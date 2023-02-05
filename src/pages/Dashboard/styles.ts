@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient'
 import styled from 'styled-components/native'
 
 export const Container = styled.View`
@@ -26,14 +25,6 @@ export const UserName = styled.Text`
   margin-left: 12px;
 `
 
-export const Footer = styled(LinearGradient)`
-  position: absolute;
-
-  left: 0;
-  bottom: 0;
-  right: 0;
-
-  padding: 24px;
-
-  flex-direction: row;
+export const Content = styled.ScrollView`
+  flex: 1;
 `

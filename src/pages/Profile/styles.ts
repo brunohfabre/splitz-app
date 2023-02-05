@@ -4,6 +4,8 @@ export const Container = styled.SafeAreaView`
   flex: 1;
 `
 
+export const AvatarContainer = styled.View``
+
 export const Content = styled.View`
   flex: 1;
   align-items: center;
