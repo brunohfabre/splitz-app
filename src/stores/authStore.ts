@@ -35,7 +35,7 @@ export const useAuthStore = create(
           token,
           user: {
             ...user,
-            avatarUrl: user.avatarUrl.includes('http')
+            avatarUrl: user.avatarUrl?.includes('http')
               ? user.avatarUrl
               : `${Constants.expoConfig.extra.API_URL}/files/${user.avatarUrl}`,
           },
@@ -49,7 +49,7 @@ export const useAuthStore = create(
         set(() => ({
           user: {
             ...user,
-            avatarUrl: user.avatarUrl.includes('http')
+            avatarUrl: user.avatarUrl?.includes('http')
               ? user.avatarUrl
               : `${Constants.expoConfig.extra.API_URL}/files/${user.avatarUrl}`,
           },

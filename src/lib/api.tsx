@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import Constants from 'expo-constants'
 
 import { useAuthStore } from '@stores/authStore'
@@ -25,15 +25,17 @@ api.interceptors.response.use(
     return response
   },
   (error) => {
-    console.log(error)
-
     if (error.response?.data.status === 'auth_error') {
       useAuthStore.getState().signOut()
 
       return
     }
 
-    alert(error.response.data.message)
+    if (error instanceof AxiosError) {
+      alert(error.message)
+    } else {
+      alert(error.response.data.message)
+    }
 
     return Promise.reject(error.response)
   },
