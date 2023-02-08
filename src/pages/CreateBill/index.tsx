@@ -97,9 +97,19 @@ export function CreateBill() {
       },
       {
         onSuccess: ({ bill }) => {
+          const { id, name, total_value, type, created_at, billUsers } = bill
+
           queryClient.setQueryData(['bills'], (prevState: any) => [
             ...prevState,
-            bill,
+            {
+              id,
+              name,
+              totalValue: total_value,
+              type,
+              createdAt: created_at,
+              billUsers,
+              isSplit: !!billUsers.length,
+            },
           ])
 
           navigation.dispatch(
