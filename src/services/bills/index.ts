@@ -10,11 +10,19 @@ export function useBills(options?: UseQueryOptions<BillType[]>) {
     async () => {
       const response = await api.get('/bills')
 
-      return response.data.bills.map((bill) => ({
-        id: bill.id,
-        name: bill.name,
-        totalValue: bill.total_value,
-      }))
+      return response.data.bills.map((bill) => {
+        const { id, name, total_value, type, created_at, billUsers } = bill
+
+        return {
+          id,
+          name,
+          totalValue: total_value,
+          type,
+          createdAt: created_at,
+          billUsers,
+          isSplit: !!billUsers.length,
+        }
+      })
     },
     options,
   )

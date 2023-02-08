@@ -1,3 +1,4 @@
+import { Bills } from '@pages/Bills'
 import { CreateBill } from '@pages/CreateBill'
 import { CreateBillFriends } from '@pages/CreateBill/CreateBillFriends'
 import { CreateBillGroups } from '@pages/CreateBill/CreateBillGroups'
@@ -13,6 +14,7 @@ type RootStackParamList = {
   dashboard: undefined
   notifications: undefined
   profile: undefined
+  bills: undefined
   friendships: undefined
   'add-friend': undefined
   'create-bill': undefined
@@ -38,6 +40,7 @@ export function AppRoutes() {
       <Stack.Screen name="dashboard" component={Dashboard} />
       <Stack.Screen name="notifications" component={Notifications} />
       <Stack.Screen name="profile" component={Profile} />
+      <Stack.Screen name="bills" component={Bills} />
       <Stack.Screen name="friendships" component={Friendships} />
       <Stack.Screen
         name="add-friend"
