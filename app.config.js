@@ -1,9 +1,9 @@
-const version = 16
+const version = 17
 
 export default {
   name: 'Splitz',
   slug: 'splitz',
-  version: '0.0.16',
+  version: '0.0.17',
   owner: 'coddee',
   orientation: 'portrait',
   icon: './assets/icon.png',
