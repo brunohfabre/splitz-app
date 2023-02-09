@@ -9,6 +9,7 @@ import ArrowDown from '@assets/icons/ArrowDown.svg'
 import ArrowUp from '@assets/icons/ArrowUp.svg'
 import { Button } from '@components/Button'
 import { Footer } from '@components/Footer'
+import { MoneyInput } from '@components/MoneyInput'
 import { PageHeader } from '@components/PageHeader'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
@@ -197,7 +198,7 @@ export function CreateBill() {
               name="value"
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
+                <MoneyInput
                   placeholder="Value"
                   onBlur={onBlur}
                   onChangeText={onChange}

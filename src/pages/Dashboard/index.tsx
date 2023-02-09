@@ -148,7 +148,7 @@ export function Dashboard() {
 
                 <TouchableOpacity
                   activeOpacity={0.6}
-                  onPress={handleNavigateToBills}
+                  onPress={handleNavigateToFriendships}
                 >
                   <Text size="sm" style={{ color: '#A1A1A1' }}>
                     See more
@@ -191,7 +191,7 @@ export function Dashboard() {
 
                 <TouchableOpacity
                   activeOpacity={0.6}
-                  onPress={handleNavigateToFriendships}
+                  onPress={handleNavigateToBills}
                 >
                   <Text size="sm" style={{ color: '#A1A1A1' }}>
                     See more

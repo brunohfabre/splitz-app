@@ -6,6 +6,7 @@ import { z } from 'zod'
 
 import { Button } from '@components/Button'
 import { PageHeader } from '@components/PageHeader'
+import { PasswordInput } from '@components/PasswordInput'
 import { TextInput } from '@components/TextInput'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { api } from '@lib/api'
@@ -107,10 +108,9 @@ export function SignUp() {
               name="password"
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
+                <PasswordInput
                   placeholder="Password"
                   style={{ marginTop: 12 }}
-                  secureTextEntry
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -123,10 +123,9 @@ export function SignUp() {
               name="passwordConfirmation"
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
+                <PasswordInput
                   placeholder="Password confirmation"
                   style={{ marginTop: 12 }}
-                  secureTextEntry
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
