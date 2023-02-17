@@ -1,9 +1,9 @@
-const version = 17
+const version = 19
 
 export default {
   name: 'Splitz',
   slug: 'splitz',
-  version: '0.0.17',
+  version: '0.0.19',
   owner: 'coddee',
   orientation: 'portrait',
   icon: './assets/icon.png',
@@ -23,7 +23,7 @@ export default {
   splash: {
     image: './assets/splash.png',
     resizeMode: 'contain',
-    backgroundColor: '#121214',
+    backgroundColor: '#9AF083',
   },
   updates: {
     fallbackToCacheTimeout: 0,
@@ -41,7 +41,7 @@ export default {
   android: {
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
-      backgroundColor: '#121214',
+      backgroundColor: '#9AF083',
     },
     package: 'br.com.coddee.splitz',
     versionCode: version,
@@ -53,6 +53,6 @@ export default {
     eas: {
       projectId: '27109648-e4fa-4ca0-b5b1-9b4fcfec254e',
     },
-    API_URL: process.env.API_URL ?? 'http://192.168.15.2:3333',
+    API_URL: process.env.API_URL ?? 'http://192.168.15.4:3333',
   },
 }

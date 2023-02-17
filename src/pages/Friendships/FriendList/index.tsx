@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -9,11 +9,15 @@ import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useNavigation } from '@react-navigation/native'
 import { useFriendships } from '@services/friendships'
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
 
 import { Friend } from './Friend'
 import { Container, Content } from './styles'
 
 export function FriendList() {
+  const formRef = useRef<FormHandles>(null)
+
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
 
@@ -52,7 +56,13 @@ export function FriendList() {
   return (
     <>
       <Container>
-        <TextInput placeholder="Search" onChangeText={handleSearch} />
+        <Form ref={formRef} onSubmit={undefined}>
+          <TextInput
+            name="search"
+            placeholder="Search"
+            onChangeText={handleSearch}
+          />
+        </Form>
 
         <Content
           contentContainerStyle={{

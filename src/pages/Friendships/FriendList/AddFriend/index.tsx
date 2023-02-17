@@ -1,4 +1,4 @@
-import { Controller, useForm } from 'react-hook-form'
+import { useRef } from 'react'
 
 import { StatusBar } from 'expo-status-bar'
 import { z } from 'zod'
@@ -6,12 +6,14 @@ import { z } from 'zod'
 import { Button } from '@components/Button'
 import { PageHeader } from '@components/PageHeader'
 import { TextInput } from '@components/TextInput'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { api } from '@lib/api'
 import { useNavigation } from '@react-navigation/native'
 import { useMutation } from '@tanstack/react-query'
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
+import { getValidationErrors } from '@utils/getValidationErrors'
 
-import { Container, Content, Form } from './styles'
+import { Container, Content } from './styles'
 
 const addFriendFormSchema = z.object({
   email: z.string().min(1, 'Required').email(),
@@ -20,15 +22,9 @@ const addFriendFormSchema = z.object({
 type AddFriendFormData = z.infer<typeof addFriendFormSchema>
 
 export function AddFriend() {
-  const navigation = useNavigation()
+  const formRef = useRef<FormHandles>(null)
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<AddFriendFormData>({
-    resolver: zodResolver(addFriendFormSchema),
-  })
+  const navigation = useNavigation()
 
   const { mutateAsync: addFriend, isLoading: isAddFriendLoading } = useMutation(
     async (data: AddFriendFormData) => {
@@ -47,34 +43,35 @@ export function AddFriend() {
     },
   )
 
+  function handleSubmit(data: AddFriendFormData) {
+    try {
+      const parsedData = addFriendFormSchema.parse(data)
+
+      addFriend(parsedData)
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        formRef.current.setErrors(getValidationErrors(err))
+      }
+    }
+  }
+
   return (
     <>
       <Container>
         <PageHeader title="Add friend" />
 
         <Content>
-          <Form>
-            <Controller
+          <Form ref={formRef} onSubmit={handleSubmit} style={{ flex: 1 }}>
+            <TextInput
               name="email"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  placeholder="Email"
-                  style={{ marginTop: 12 }}
-                  keyboardType="email-address"
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  errorMessage={errors.email?.message}
-                />
-              )}
+              placeholder="Email"
+              autoCorrect={false}
+              autoCapitalize="none"
             />
           </Form>
 
           <Button
-            onPress={handleSubmit(addFriend as any)}
+            onPress={() => formRef.current.submitForm()}
             isLoading={isAddFriendLoading}
           >
             Send invite

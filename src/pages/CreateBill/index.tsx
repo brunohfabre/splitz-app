@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useRef, useState } from 'react'
 
 import * as ImagePicker from 'expo-image-picker'
 import { StatusBar } from 'expo-status-bar'
@@ -13,17 +12,18 @@ import { MoneyInput } from '@components/MoneyInput'
 import { PageHeader } from '@components/PageHeader'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { api } from '@lib/api'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
+import { getValidationErrors } from '@utils/getValidationErrors'
 
 import { useFriendshipsStore } from './stores/friendshipsStore'
 import { useGroupsStore } from './stores/groupsStore'
 import {
   Container,
   Content,
-  Form,
   InvoiceImage,
   OptionsContainer,
   PictureButton,
@@ -40,16 +40,10 @@ type CreateBillFormData = {
 }
 
 export function CreateBill() {
+  const formRef = useRef<FormHandles>(null)
+
   const navigation = useNavigation()
   const queryClient = useQueryClient()
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CreateBillFormData>({
-    resolver: zodResolver(createBillFormSchema),
-  })
 
   const { friendships, clearFriendships } = useFriendshipsStore((state) => ({
     friendships: state.friendships,
@@ -123,6 +117,18 @@ export function CreateBill() {
       },
     )
 
+  function handleSubmit(data: CreateBillFormData) {
+    try {
+      const parsedData = createBillFormSchema.parse(data)
+
+      createBill(parsedData)
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        formRef.current.setErrors(getValidationErrors(err))
+      }
+    }
+  }
+
   function handleChangeTypeToIncome() {
     setType('INCOME')
 
@@ -193,35 +199,13 @@ export function CreateBill() {
             </Button>
           </OptionsContainer>
 
-          <Form>
-            <Controller
-              name="value"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <MoneyInput
-                  placeholder="Value"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  errorMessage={errors.value?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name="name"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  placeholder="Name"
-                  style={{ marginTop: 12 }}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  errorMessage={errors.name?.message}
-                />
-              )}
-            />
+          <Form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            style={{ padding: 24, gap: 12 }}
+          >
+            <MoneyInput name="value" placeholder="Value" />
+            <TextInput name="name" placeholder="Name" />
           </Form>
 
           {type === 'OUTCOME' && (
@@ -250,7 +234,7 @@ export function CreateBill() {
         <Footer>
           <Button
             block
-            onLongPress={handleSubmit(createBill as any)}
+            onLongPress={() => formRef.current.submitForm()}
             isLoading={isCreateBillLoading}
           >
             Hold to finish

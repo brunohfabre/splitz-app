@@ -26,10 +26,6 @@ export const OptionsContainer = styled.View`
   padding: 0 24px;
 `
 
-export const Form = styled.View`
-  padding: 24px;
-`
-
 export const Content = styled(KeyboardAwareScrollView)`
   flex: 1;
 `

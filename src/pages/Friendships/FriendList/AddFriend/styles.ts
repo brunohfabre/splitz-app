@@ -14,7 +14,3 @@ export const Content = styled(KeyboardAwareScrollView).attrs({
   flex: 1;
   padding: 8px 24px 24px;
 `
-
-export const Form = styled.View`
-  flex: 1;
-`
