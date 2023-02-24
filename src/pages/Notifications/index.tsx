@@ -39,7 +39,7 @@ export function Notifications() {
   )
 
   return (
-    <Container style={{ marginTop: insets.top }}>
+    <Container>
       <PageHeader title="Notifications" />
 
       <Content

@@ -7,6 +7,10 @@ type HeadingProps = {
   size: Size
 } & ComponentProps<typeof Container>
 
-export function Heading({ children, size }: HeadingProps) {
-  return <Container size={size}>{children}</Container>
+export function Heading({ children, size, ...props }: HeadingProps) {
+  return (
+    <Container size={size} {...props}>
+      {children}
+    </Container>
+  )
 }

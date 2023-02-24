@@ -1,17 +1,51 @@
-import { SafeAreaView, ScrollView, Text, View } from 'react-native'
+import { SafeAreaView, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { toMoney } from 'vanilla-masker'
+
+import ArrowDown from '@assets/icons/ArrowDown.svg'
+import ArrowUp from '@assets/icons/ArrowUp.svg'
 import Bell from '@assets/icons/Bell.svg'
+import Percent from '@assets/icons/Percent.svg'
+import Plus from '@assets/icons/Plus.svg'
+import PlusAvatar from '@assets/icons/PlusAvatar.svg'
+import Users from '@assets/icons/Users.svg'
+import Wallet from '@assets/icons/Wallet.svg'
 import { Avatar } from '@components/Avatar'
 import { Button } from '@components/Button'
+import { Footer } from '@components/Footer'
+import { Heading } from '@components/Heading'
 import { IconButton } from '@components/IconButton'
-import { api } from '@lib/api'
+import { Text } from '@components/Text'
 import { useNavigation } from '@react-navigation/native'
+import { useBills } from '@services/bills'
+import { useFriendships } from '@services/friendships'
 import { useAuthStore } from '@stores/authStore'
-import { useQuery } from '@tanstack/react-query'
 import { getFirstAndLastName } from '@utils/getFirstAndLastName'
 
-import { Container, Footer, Header, UserContainer, UserName } from './styles'
+import { Shimmer } from './Shimmer'
+import {
+  AddFriendButtonAvatar,
+  AddFriendButtonContainer,
+  BillContainer,
+  BillContent,
+  BillInfo,
+  BillsContainer,
+  BillsContent,
+  BillType,
+  BillValue,
+  Container,
+  Content,
+  Friend,
+  FriendsContainer,
+  FriendsContent,
+  Header,
+  SectionHeader,
+  SummaryContainer,
+  SummaryContent,
+  UserContainer,
+  UserName,
+} from './styles'
 
 export function Dashboard() {
   const navigation = useNavigation()
@@ -21,14 +55,25 @@ export function Dashboard() {
 
   const userShortName = getFirstAndLastName(user.name)
 
-  const { data: splits, isLoading: isSplitsLoading } = useQuery(
-    ['splits'],
-    async () => {
-      const response = await api.get('/splits')
+  const { data: friendships, isLoading: isFriendshipsLoading } =
+    useFriendships()
+  const { data: bills, isLoading: isBillsLoading } = useBills()
 
-      return response.data.splits
-    },
-  )
+  const summaryValue = bills?.reduce((acc, bill) => {
+    if (bill.isSplit) {
+      return acc - bill.billUsers[0].value
+    }
+
+    if (bill.type === 'INCOME') {
+      return acc + bill.totalValue
+    }
+
+    if (bill.type === 'OUTCOME') {
+      return acc - bill.totalValue
+    }
+
+    return 0
+  }, 0)
 
   function handleNavigateToProfile() {
     navigation.navigate('profile')
@@ -38,20 +83,20 @@ export function Dashboard() {
     navigation.navigate('notifications')
   }
 
+  function handleNavigateToBills() {
+    navigation.navigate('bills')
+  }
+
   function handleNavigateToBillValue() {
-    navigation.navigate('split-bill-value')
+    navigation.navigate('create-bill')
   }
 
-  function handleNavigateToFriends() {
-    navigation.navigate('friends')
+  function handleNavigateToFriendships() {
+    navigation.navigate('friendships')
   }
 
-  if (!splits && isSplitsLoading) {
-    return (
-      <View>
-        <Text>is loading</Text>
-      </View>
-    )
+  function handleNavigateToAddFriend() {
+    navigation.navigate('add-friend')
   }
 
   return (
@@ -59,7 +104,7 @@ export function Dashboard() {
       <SafeAreaView>
         <Header>
           <UserContainer onPress={handleNavigateToProfile}>
-            <Avatar />
+            <Avatar sourceUri={user.avatarUrl} />
 
             <UserName>{userShortName}</UserName>
           </UserContainer>
@@ -70,36 +115,154 @@ export function Dashboard() {
         </Header>
       </SafeAreaView>
 
-      <ScrollView
-        style={{
-          flex: 1,
-        }}
-        contentContainerStyle={{
-          paddingHorizontal: 24,
-          paddingBottom: insets.bottom + 48 + 56,
-        }}
-      >
-        <Text>{JSON.stringify(splits, null, 2)}</Text>
-      </ScrollView>
+      {(!friendships && isFriendshipsLoading) || (!bills && isBillsLoading) ? (
+        <Shimmer />
+      ) : (
+        <>
+          <Content
+            contentContainerStyle={{
+              paddingBottom: insets.bottom + 24 + 12 + 56,
+            }}
+          >
+            <SummaryContainer>
+              <SectionHeader>
+                <Text size="sm" style={{ color: '#A1A1A1' }}>
+                  Your balance
+                </Text>
+              </SectionHeader>
 
-      <Footer
-        style={{ paddingBottom: insets.bottom + 24 }}
-        colors={['rgba(255, 255, 255, 0)', '#ffffff']}
-      >
-        <Button
-          onPress={() => alert('handle press')}
-          style={{ flex: 1 }}
-          disabled
-        >
-          Bills
-        </Button>
-        <Button onPress={handleNavigateToBillValue} style={{ flex: 1 }}>
-          +
-        </Button>
-        <Button onPress={handleNavigateToFriends} style={{ flex: 1 }}>
-          Friends
-        </Button>
-      </Footer>
+              <SummaryContent>
+                <Heading size="3xl">
+                  {toMoney(summaryValue, {
+                    unit: 'R$',
+                  })}
+                </Heading>
+              </SummaryContent>
+            </SummaryContainer>
+
+            <FriendsContainer>
+              <SectionHeader>
+                <Text size="sm" style={{ color: '#A1A1A1' }}>
+                  Friends
+                </Text>
+
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={handleNavigateToFriendships}
+                >
+                  <Text size="sm" style={{ color: '#A1A1A1' }}>
+                    See more
+                  </Text>
+                </TouchableOpacity>
+              </SectionHeader>
+
+              <FriendsContent
+                horizontal
+                contentContainerStyle={{ paddingHorizontal: 24 }}
+              >
+                <AddFriendButtonContainer
+                  activeOpacity={0.6}
+                  onPress={handleNavigateToAddFriend}
+                >
+                  <AddFriendButtonAvatar>
+                    <PlusAvatar />
+                  </AddFriendButtonAvatar>
+                  <Text size="sm" style={{ marginTop: 8, color: '#aaaaaa' }}>
+                    Add
+                  </Text>
+                </AddFriendButtonContainer>
+
+                {friendships.map((friendship) => (
+                  <Friend key={friendship.id}>
+                    <Avatar />
+                    <Text size="sm" style={{ marginTop: 8 }}>
+                      Name
+                    </Text>
+                  </Friend>
+                ))}
+              </FriendsContent>
+            </FriendsContainer>
+
+            <BillsContainer>
+              <SectionHeader>
+                <Text size="sm" style={{ color: '#A1A1A1' }}>
+                  Recent activity
+                </Text>
+
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={handleNavigateToBills}
+                >
+                  <Text size="sm" style={{ color: '#A1A1A1' }}>
+                    See more
+                  </Text>
+                </TouchableOpacity>
+              </SectionHeader>
+
+              <BillsContent>
+                {bills.map((bill) => (
+                  <BillContainer key={bill.id}>
+                    <BillContent>
+                      <BillType>
+                        {bill.type === 'INCOME' && <ArrowDown />}
+
+                        {bill.type === 'OUTCOME' && !bill.billUsers.length && (
+                          <ArrowUp />
+                        )}
+
+                        {bill.type === 'OUTCOME' && !!bill.billUsers.length && (
+                          <Percent />
+                        )}
+                      </BillType>
+
+                      <BillInfo>
+                        <Heading size="sm">{bill.name}</Heading>
+                        <Text size="xs">{bill.createdAt}</Text>
+                      </BillInfo>
+                    </BillContent>
+
+                    <BillValue>
+                      {bill.billUsers.length ? (
+                        <>
+                          <Heading size="lg">
+                            {toMoney(bill.billUsers[0].value, {
+                              unit: 'R$',
+                            })}
+                          </Heading>
+
+                          <Text size="sm">
+                            {toMoney(bill.totalValue, {
+                              unit: 'R$',
+                            })}
+                          </Text>
+                        </>
+                      ) : (
+                        <Heading size="lg">
+                          {toMoney(bill.totalValue, {
+                            unit: 'R$',
+                          })}
+                        </Heading>
+                      )}
+                    </BillValue>
+                  </BillContainer>
+                ))}
+              </BillsContent>
+            </BillsContainer>
+          </Content>
+
+          <Footer>
+            <Button onPress={handleNavigateToBills} block>
+              <Wallet />
+            </Button>
+            <Button onPress={handleNavigateToBillValue} block>
+              <Plus />
+            </Button>
+            <Button onPress={handleNavigateToFriendships} block>
+              <Users />
+            </Button>
+          </Footer>
+        </>
+      )}
     </Container>
   )
 }

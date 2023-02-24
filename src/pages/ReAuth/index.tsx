@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native'
 
 import * as LocalAuthentication from 'expo-local-authentication'
@@ -8,7 +7,6 @@ import { z } from 'zod'
 import { Button } from '@components/Button'
 import { PageHeader } from '@components/PageHeader'
 import { TextInput } from '@components/TextInput'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { api } from '@lib/api'
 import { useAuthStore } from '@stores/authStore'
 import { useReAuthStore } from '@stores/reAuthStore'
@@ -30,16 +28,16 @@ export function ReAuth() {
   }))
   const authenticate = useReAuthStore((state) => state.authenticate)
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ReAuthFormData>({
-    values: {
-      email: user.email,
-    },
-    resolver: zodResolver(reAuthFormSchema),
-  })
+  // const {
+  //   control,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm<ReAuthFormData>({
+  //   values: {
+  //     email: user.email,
+  //   },
+  //   resolver: zodResolver(reAuthFormSchema),
+  // })
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -59,6 +57,8 @@ export function ReAuth() {
 
           authenticate()
           signIn({ token, user })
+        } catch (err) {
+          console.log(err)
         } finally {
           setIsLoading(false)
         }
@@ -105,7 +105,7 @@ export function ReAuth() {
 
         <Content>
           <Form>
-            <Controller
+            {/* <Controller
               name="email"
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
@@ -138,10 +138,13 @@ export function ReAuth() {
                   errorMessage={errors.password?.message}
                 />
               )}
-            />
+            /> */}
           </Form>
 
-          <Button onPress={handleSubmit(handleReAuth)} isLoading={isLoading}>
+          <Button
+            // onPress={handleSubmit(handleReAuth)}
+            isLoading={isLoading}
+          >
             Sign in
           </Button>
 

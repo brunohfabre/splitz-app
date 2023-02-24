@@ -8,7 +8,18 @@ export default {
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'dark',
-  plugins: ['expo-apple-authentication'],
+  plugins: [
+    'expo-apple-authentication',
+    [
+      'expo-image-picker',
+      {
+        photosPermission:
+          'The app accesses your photos to let you share them with your friends.',
+        cameraPermission:
+          'The app accesses your camera to let you share them with your friends.',
+      },
+    ],
+  ],
   splash: {
     image: './assets/splash.png',
     resizeMode: 'contain',
@@ -42,6 +53,6 @@ export default {
     eas: {
       projectId: '27109648-e4fa-4ca0-b5b1-9b4fcfec254e',
     },
-    API_URL: process.env.API_URL ?? 'http://192.168.15.3:3333',
+    API_URL: process.env.API_URL ?? 'http://192.168.15.4:3333',
   },
 }

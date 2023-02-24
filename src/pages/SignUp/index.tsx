@@ -1,18 +1,20 @@
-import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native'
 
 import { z } from 'zod'
 
 import { Button } from '@components/Button'
 import { PageHeader } from '@components/PageHeader'
+import { PasswordInput } from '@components/PasswordInput'
 import { TextInput } from '@components/TextInput'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { api } from '@lib/api'
 import { useAuthStore } from '@stores/authStore'
 import { useReAuthStore } from '@stores/reAuthStore'
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
+import { getValidationErrors } from '@utils/getValidationErrors'
 
-import { Container, Content, Form } from './styles'
+import { Container, Content } from './styles'
 
 const signUpFormSchema = z
   .object({
@@ -34,24 +36,18 @@ const signUpFormSchema = z
 type SignUpFormData = z.infer<typeof signUpFormSchema>
 
 export function SignUp() {
+  const formRef = useRef<FormHandles>(null)
+
   const signIn = useAuthStore((state) => state.signIn)
   const authenticate = useReAuthStore((state) => state.authenticate)
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpFormSchema),
-  })
-
   const [isLoading, setIsLoading] = useState(false)
 
-  async function handleSignUp(data: SignUpFormData) {
+  async function handleSubmit(data: SignUpFormData) {
     try {
       setIsLoading(true)
 
-      const { name, email, password } = data
+      const { name, email, password } = signUpFormSchema.parse(data)
 
       const response = await api.post('/users', { name, email, password })
 
@@ -59,6 +55,12 @@ export function SignUp() {
 
       authenticate()
       signIn({ token, user })
+    } catch (err) {
+      console.log(err)
+
+      if (err instanceof z.ZodError) {
+        formRef.current.setErrors(getValidationErrors(err))
+      }
     } finally {
       setIsLoading(false)
     }
@@ -70,73 +72,29 @@ export function SignUp() {
         <PageHeader title="Sign up" />
 
         <Content>
-          <Form>
-            <Controller
-              name="name"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  placeholder="Name"
-                  autoCorrect={false}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  errorMessage={errors.name?.message}
-                />
-              )}
-            />
-            <Controller
+          <Form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            style={{ flex: 1, gap: 12 }}
+          >
+            <TextInput name="name" placeholder="Name" />
+            <TextInput
               name="email"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  placeholder="Email"
-                  style={{ marginTop: 12 }}
-                  keyboardType="email-address"
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  errorMessage={errors.email?.message}
-                />
-              )}
+              placeholder="Email"
+              autoCapitalize="none"
+              autoCorrect={false}
             />
-
-            <Controller
-              name="password"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  placeholder="Password"
-                  style={{ marginTop: 12 }}
-                  secureTextEntry
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  errorMessage={errors.password?.message}
-                />
-              )}
-            />
-
-            <Controller
+            <PasswordInput name="password" placeholder="Password" />
+            <PasswordInput
               name="passwordConfirmation"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  placeholder="Password confirmation"
-                  style={{ marginTop: 12 }}
-                  secureTextEntry
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  errorMessage={errors.passwordConfirmation?.message}
-                />
-              )}
+              placeholder="Password confirmation"
             />
           </Form>
 
-          <Button onPress={handleSubmit(handleSignUp)} isLoading={isLoading}>
+          <Button
+            onPress={() => formRef.current?.submitForm()}
+            isLoading={isLoading}
+          >
             Sign up
           </Button>
         </Content>

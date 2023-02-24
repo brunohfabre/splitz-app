@@ -1,18 +1,20 @@
-import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native'
 
 import { z } from 'zod'
 
 import { Button } from '@components/Button'
 import { PageHeader } from '@components/PageHeader'
+import { PasswordInput } from '@components/PasswordInput'
 import { TextInput } from '@components/TextInput'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { api } from '@lib/api'
 import { useAuthStore } from '@stores/authStore'
 import { useReAuthStore } from '@stores/reAuthStore'
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
+import { getValidationErrors } from '@utils/getValidationErrors'
 
-import { Container, Content, Form } from './styles'
+import { Container, Content } from './styles'
 
 const signInFormSchema = z.object({
   email: z.string().min(1, 'Required').email(),
@@ -22,24 +24,18 @@ const signInFormSchema = z.object({
 type SignInFormData = z.infer<typeof signInFormSchema>
 
 export function SignIn() {
+  const formRef = useRef<FormHandles>(null)
+
   const signIn = useAuthStore((state) => state.signIn)
   const authenticate = useReAuthStore((state) => state.authenticate)
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignInFormData>({
-    resolver: zodResolver(signInFormSchema),
-  })
-
   const [isLoading, setIsLoading] = useState(false)
 
-  async function handleSignIn(data: SignInFormData) {
+  async function handleSubmit(data: SignInFormData) {
     try {
-      setIsLoading(true)
+      const { email, password } = signInFormSchema.parse(data)
 
-      const { email, password } = data
+      setIsLoading(true)
 
       const response = await api.post('/sessions', {
         email,
@@ -50,6 +46,10 @@ export function SignIn() {
 
       authenticate()
       signIn({ token, user })
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        formRef.current.setErrors(getValidationErrors(err))
+      }
     } finally {
       setIsLoading(false)
     }
@@ -61,43 +61,24 @@ export function SignIn() {
         <PageHeader title="Sign in" />
 
         <Content>
-          <Form>
-            <Controller
+          <Form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            style={{ flex: 1, gap: 12 }}
+          >
+            <TextInput
               name="email"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  placeholder="Email"
-                  style={{ marginTop: 12 }}
-                  keyboardType="email-address"
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  errorMessage={errors.email?.message}
-                />
-              )}
+              placeholder="Email"
+              autoCapitalize="none"
+              autoCorrect={false}
             />
-
-            <Controller
-              name="password"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  placeholder="Password"
-                  style={{ marginTop: 12 }}
-                  secureTextEntry
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  errorMessage={errors.password?.message}
-                />
-              )}
-            />
+            <PasswordInput name="password" placeholder="Password" />
           </Form>
 
-          <Button onPress={handleSubmit(handleSignIn)} isLoading={isLoading}>
+          <Button
+            onPress={() => formRef.current.submitForm()}
+            isLoading={isLoading}
+          >
             Sign in
           </Button>
         </Content>
