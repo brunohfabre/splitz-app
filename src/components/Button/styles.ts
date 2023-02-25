@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import styled, { css } from 'styled-components/native'
 
 type ContainerProps = {
@@ -5,15 +6,6 @@ type ContainerProps = {
 }
 
 export const Container = styled.TouchableOpacity<ContainerProps>`
-  background-color: #d9d9d9;
-  height: 56px;
-
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0 24px;
-
   ${({ block }) =>
     block &&
     css`
@@ -27,12 +19,32 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
     `}
 `
 
-export const ButtonText = styled.Text`
-  font-size: 16px;
-  font-family: 'Inter_600SemiBold';
-  color: #000000;
+export const PrimaryShape = styled(LinearGradient).attrs(({ theme }) => ({
+  colors: [theme.secondary, theme.primary],
+  start: { x: 0, y: 1 },
+  end: { x: 1, y: 0 },
+}))`
+  height: 56px;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 24px;
+
+  border-radius: 12px;
 `
 
-export const IconContainer = styled.View`
-  margin-left: 8px;
+export const SecondaryShape = styled.View`
+  background-color: ${({ theme }) => theme.shapeSecondary};
+
+  height: 56px;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 24px;
+
+  border-radius: 12px;
 `

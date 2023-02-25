@@ -23,7 +23,7 @@ export default {
   splash: {
     image: './assets/splash.png',
     resizeMode: 'contain',
-    backgroundColor: '#202024',
+    backgroundColor: '#121214',
   },
   updates: {
     fallbackToCacheTimeout: 0,
@@ -41,7 +41,7 @@ export default {
   android: {
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
-      backgroundColor: '#202024',
+      backgroundColor: '#121214',
     },
     package: 'br.com.coddee.splitz',
     versionCode: version,
@@ -53,6 +53,6 @@ export default {
     eas: {
       projectId: '27109648-e4fa-4ca0-b5b1-9b4fcfec254e',
     },
-    API_URL: process.env.API_URL ?? 'http://192.168.15.4:3333',
+    API_URL: process.env.API_URL ?? 'http://192.168.15.6:3333',
   },
 }

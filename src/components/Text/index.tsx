@@ -1,16 +1,11 @@
 import { ComponentProps } from 'react'
 
-import { Container, Size } from './styles'
+import { Container } from './styles'
 
 type TextProps = {
   children: string
-  size: Size
 } & ComponentProps<typeof Container>
 
-export function Text({ children, size, ...props }: TextProps) {
-  return (
-    <Container size={size} {...props}>
-      {children}
-    </Container>
-  )
+export function Text({ children, ...props }: TextProps) {
+  return <Container {...props}>{children}</Container>
 }

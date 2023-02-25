@@ -55,15 +55,29 @@ const sizes = {
   `,
 }
 
+const colors = {
+  title: css`
+    color: ${({ theme }) => theme.textTitle};
+  `,
+  base: css`
+    color: ${({ theme }) => theme.textBase};
+  `,
+  support: css`
+    color: ${({ theme }) => theme.textSupport};
+  `,
+}
+
 export type Size = keyof typeof sizes
+export type Color = keyof typeof colors
 
 type ContainerProps = {
   size: Size
+  color: Color
 }
 
 export const Container = styled.Text<ContainerProps>`
   font-family: 'Inter_400Regular';
-  color: #000000;
 
   ${({ size }) => sizes[size]}
+  ${({ color }) => colors[color ?? 'base']};
 `

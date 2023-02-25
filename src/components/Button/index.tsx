@@ -1,13 +1,17 @@
 import { ReactNode } from 'react'
-import { TouchableOpacityProps, ActivityIndicator } from 'react-native'
+import { TouchableOpacityProps } from 'react-native'
 
-import { ButtonText, Container, IconContainer } from './styles'
+import { ButtonText } from './ButtonText'
+import { Container, PrimaryShape, SecondaryShape } from './styles'
+
+export type VariantType = 'primary' | 'secondary'
 
 type ButtonProps = {
   children: ReactNode
   isLoading?: boolean
   block?: boolean
   icon?: ReactNode
+  variant?: VariantType
 } & TouchableOpacityProps
 
 export function Button({
@@ -16,8 +20,26 @@ export function Button({
   disabled,
   block,
   icon,
+  variant = 'primary',
   ...props
 }: ButtonProps) {
+  if (variant === 'primary') {
+    return (
+      <Container
+        activeOpacity={0.6}
+        disabled={isLoading || disabled}
+        block={block}
+        {...props}
+      >
+        <PrimaryShape>
+          <ButtonText isLoading={isLoading} variant={variant} icon={icon}>
+            {children}
+          </ButtonText>
+        </PrimaryShape>
+      </Container>
+    )
+  }
+
   return (
     <Container
       activeOpacity={0.6}
@@ -25,19 +47,11 @@ export function Button({
       block={block}
       {...props}
     >
-      {isLoading ? (
-        <ActivityIndicator color="black" />
-      ) : (
-        <>
-          {typeof children === 'string' ? (
-            <ButtonText>{children}</ButtonText>
-          ) : (
-            children
-          )}
-
-          {!!icon && <IconContainer>{icon}</IconContainer>}
-        </>
-      )}
+      <SecondaryShape>
+        <ButtonText isLoading={isLoading} variant={variant} icon={icon}>
+          {children}
+        </ButtonText>
+      </SecondaryShape>
     </Container>
   )
 }
