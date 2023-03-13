@@ -1,21 +1,28 @@
 import { useRef, useEffect, useCallback, useState } from 'react'
 import { TextInputProps as RNTextInputProps } from 'react-native'
 
+import { useTheme } from 'styled-components/native'
+
 import Eye from '@assets/icons/Eye.svg'
 import EyeSlash from '@assets/icons/EyeSlash.svg'
+import { Text } from '@components/Text'
 import { useField } from '@unform/core'
 
 import { Container, Error, Input, InputContainer, SuffixButton } from './styles'
 
 type PasswordInputProps = {
   name: string
+  label?: string
 } & RNTextInputProps
 
 export function PasswordInput({
   name,
   onChangeText,
+  label,
   ...rest
 }: PasswordInputProps) {
+  const theme = useTheme()
+
   const inputRef = useRef(null)
 
   const [isFocused, setIsFocused] = useState(false)
@@ -68,12 +75,14 @@ export function PasswordInput({
 
   return (
     <Container>
+      {label && <Text>{label}</Text>}
+
       <InputContainer isFocused={isFocused} isErrored={!!error}>
         <Input
           ref={inputRef}
           onChangeText={handleChangeText}
           defaultValue={defaultValue}
-          placeholderTextColor="#d9d9d9"
+          placeholderTextColor={theme.placeholder}
           onFocus={handleFocus}
           onBlur={handleBlur}
           secureTextEntry={hidden}

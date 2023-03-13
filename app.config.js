@@ -1,9 +1,9 @@
-const version = 23
+const version = 24
 
 export default {
   name: 'Splitz',
   slug: 'splitz',
-  version: '0.0.23',
+  version: '0.0.24',
   owner: 'coddee',
   orientation: 'portrait',
   icon: './assets/icon.png',
@@ -53,6 +53,6 @@ export default {
     eas: {
       projectId: '27109648-e4fa-4ca0-b5b1-9b4fcfec254e',
     },
-    API_URL: process.env.API_URL ?? 'http://192.168.15.6:3333',
+    API_URL: process.env.API_URL ?? 'http://192.168.15.12:3333',
   },
 }

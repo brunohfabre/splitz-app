@@ -32,11 +32,16 @@ export const PrimaryShape = styled(LinearGradient).attrs(({ theme }) => ({
 
   padding: 0 24px;
 
-  border-radius: 12px;
+  border-radius: 16px;
 `
 
-export const SecondaryShape = styled.View`
-  background-color: ${({ theme }) => theme.shapeSecondary};
+type SecondaryShapeProps = {
+  filled: boolean
+}
+
+export const SecondaryShape = styled.View<SecondaryShapeProps>`
+  background-color: ${({ theme, filled }) =>
+    filled ? theme.shapeSecondary : 'transparent'};
 
   height: 56px;
 
@@ -46,5 +51,5 @@ export const SecondaryShape = styled.View`
 
   padding: 0 24px;
 
-  border-radius: 12px;
+  border-radius: 16px;
 `

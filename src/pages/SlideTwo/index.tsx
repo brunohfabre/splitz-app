@@ -1,6 +1,4 @@
-import { SafeAreaView } from 'react-native'
-
-import Cube from '@assets/icons/Cube.svg'
+import { BackgroundPattern } from '@components/BackgroundPattern'
 import { Button } from '@components/Button'
 import { Heading } from '@components/Heading'
 import { PageHeader } from '@components/PageHeader'
@@ -12,7 +10,6 @@ import {
   Container,
   Content,
   CurrentStep,
-  IconContainer,
   InfoContainer,
   Step,
   StepsContainer,
@@ -33,30 +30,24 @@ export function SlideTwo() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <BackgroundPattern>
+      <PageHeader title="" />
+
       <Container>
-        <PageHeader title="" />
+        <InfoContainer>
+          <Heading size="4xl">Simple. Paperless. Secure.</Heading>
+          <Text size="md" style={{ marginTop: 8 }}>
+            Keep track of payments and split bills with your friends.
+          </Text>
+        </InfoContainer>
 
-        <Content>
-          <IconContainer>
-            <Cube />
-          </IconContainer>
+        <StepsContainer>
+          <Step />
+          <CurrentStep />
+        </StepsContainer>
 
-          <InfoContainer>
-            <Heading size="4xl">Simple. Paperless. Secure.</Heading>
-            <Text size="md" style={{ marginTop: 8 }}>
-              Keep track of payments and split bills with your friends.
-            </Text>
-          </InfoContainer>
-
-          <StepsContainer>
-            <Step />
-            <CurrentStep />
-          </StepsContainer>
-
-          <Button onPress={handleViewSlide}>Get started now</Button>
-        </Content>
+        <Button onPress={handleViewSlide}>Get started now</Button>
       </Container>
-    </SafeAreaView>
+    </BackgroundPattern>
   )
 }

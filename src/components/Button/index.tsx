@@ -4,10 +4,10 @@ import { TouchableOpacityProps } from 'react-native'
 import { ButtonText } from './ButtonText'
 import { Container, PrimaryShape, SecondaryShape } from './styles'
 
-export type VariantType = 'primary' | 'secondary'
+export type VariantType = 'primary' | 'secondary' | 'ghost'
 
 type ButtonProps = {
-  children: ReactNode
+  children?: ReactNode
   isLoading?: boolean
   block?: boolean
   icon?: ReactNode
@@ -47,7 +47,7 @@ export function Button({
       block={block}
       {...props}
     >
-      <SecondaryShape>
+      <SecondaryShape filled={variant === 'secondary'}>
         <ButtonText isLoading={isLoading} variant={variant} icon={icon}>
           {children}
         </ButtonText>

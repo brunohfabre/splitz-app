@@ -1,6 +1,8 @@
 import styled, { css } from 'styled-components/native'
 
-export const Container = styled.View``
+export const Container = styled.View`
+  gap: 4px;
+`
 
 type InputContainerProps = {
   isFocused: boolean
@@ -10,20 +12,23 @@ type InputContainerProps = {
 export const InputContainer = styled.View<InputContainerProps>`
   flex-direction: row;
 
-  border-bottom-width: 2px;
-  border-bottom-color: #d9d9d9;
+  background-color: ${({ theme }) => theme.shapePrimary};
+
+  border-radius: 16px;
+  border-width: 2px;
+  border-color: ${({ theme }) => theme.shapePrimary};
 
   ${({ isFocused }) =>
     isFocused &&
     css`
-      border-bottom-color: #000000;
+      border-color: ${({ theme }) => theme.primary};
     `}
 
   ${({ isErrored }) =>
     isErrored &&
     css`
-      border-bottom-color: red;
-    `}
+      border-color: ${({ theme }) => theme.red[500]};
+    `};
 `
 
 export const Input = styled.TextInput`
@@ -32,6 +37,9 @@ export const Input = styled.TextInput`
 
   font-family: 'Inter_400Regular';
   font-size: 16px;
+  color: ${({ theme }) => theme.textBase};
+
+  padding: 0 16px;
 `
 
 export const SuffixButton = styled.TouchableOpacity`

@@ -1,15 +1,13 @@
-import { SafeAreaView } from 'react-native'
-
-import Cube from '@assets/icons/Cube.svg'
+import { BackgroundPattern } from '@components/BackgroundPattern'
 import { Button } from '@components/Button'
 import { Heading } from '@components/Heading'
+import { CaretRight } from '@components/icons'
 import { Text } from '@components/Text'
 import { useNavigation } from '@react-navigation/native'
 
 import {
   Container,
   CurrentStep,
-  IconContainer,
   InfoContainer,
   Step,
   StepsContainer,
@@ -23,12 +21,8 @@ export function SlideOne() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <BackgroundPattern>
       <Container>
-        <IconContainer>
-          <Cube />
-        </IconContainer>
-
         <InfoContainer>
           <Heading size="4xl">Pay and send invoices.</Heading>
           <Text size="md" style={{ marginTop: 8 }}>
@@ -41,8 +35,13 @@ export function SlideOne() {
           <Step />
         </StepsContainer>
 
-        <Button onPress={handleNavigateToSlideTwo}>Next</Button>
+        <Button
+          onPress={handleNavigateToSlideTwo}
+          icon={<CaretRight weight="bold" size={16} />}
+        >
+          Next
+        </Button>
       </Container>
-    </SafeAreaView>
+    </BackgroundPattern>
   )
 }

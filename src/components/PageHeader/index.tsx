@@ -1,9 +1,9 @@
 import { ComponentProps } from 'react'
 import { SafeAreaView } from 'react-native'
 
-import CaretLeft from '@assets/icons/CaretLeft.svg'
 import { Heading } from '@components/Heading'
 import { IconButton } from '@components/IconButton'
+import { CaretLeft } from '@components/icons/CaretLeft'
 import { useNavigation } from '@react-navigation/native'
 
 import { Container, TitleContainer } from './styles'
@@ -28,8 +28,8 @@ export function PageHeader({
     <SafeAreaView>
       <Container {...props}>
         {showBackButton && (
-          <IconButton onPress={handleGoBack}>
-            <CaretLeft />
+          <IconButton onPress={handleGoBack} variant="secondary">
+            <CaretLeft color="white" />
           </IconButton>
         )}
 

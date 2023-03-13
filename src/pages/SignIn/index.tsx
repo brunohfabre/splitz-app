@@ -64,15 +64,20 @@ export function SignIn() {
           <Form
             ref={formRef}
             onSubmit={handleSubmit}
-            style={{ flex: 1, gap: 12 }}
+            style={{ flex: 1, gap: 8 }}
           >
             <TextInput
               name="email"
               placeholder="Email"
               autoCapitalize="none"
               autoCorrect={false}
+              label="Email"
             />
-            <PasswordInput name="password" placeholder="Password" />
+            <PasswordInput
+              name="password"
+              placeholder="Password"
+              label="Password"
+            />
           </Form>
 
           <Button

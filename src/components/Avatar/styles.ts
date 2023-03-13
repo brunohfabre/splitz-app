@@ -28,7 +28,7 @@ type ContainerProps = {
 }
 
 export const Container = styled.Image<ContainerProps>`
-  background-color: #f1f1f1;
+  background-color: ${({ theme }) => theme.shapePrimary};
 
   ${({ size }) => sizes[size]}
 `

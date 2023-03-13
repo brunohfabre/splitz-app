@@ -1,6 +1,8 @@
 import styled, { css } from 'styled-components/native'
 
-export const Container = styled.View``
+export const Container = styled.View`
+  gap: 4px;
+`
 
 type InputProps = {
   isFocused: boolean
@@ -9,23 +11,29 @@ type InputProps = {
 
 export const Input = styled.TextInput<InputProps>`
   height: 56px;
-  border-bottom-width: 2px;
-  border-bottom-color: #d9d9d9;
 
   font-family: 'Inter_400Regular';
   font-size: 16px;
+  color: ${({ theme }) => theme.textBase};
+
+  background-color: ${({ theme }) => theme.shapePrimary};
+
+  padding: 0 16px;
+  border-radius: 16px;
+  border-width: 2px;
+  border-color: ${({ theme }) => theme.shapePrimary};
 
   ${({ isFocused }) =>
     isFocused &&
     css`
-      border-bottom-color: #000000;
+      border-color: ${({ theme }) => theme.primary};
     `}
 
   ${({ isErrored }) =>
     isErrored &&
     css`
-      border-bottom-color: red;
-    `}
+      border-color: ${({ theme }) => theme.red[500]};
+    `};
 `
 
 export const Error = styled.Text`

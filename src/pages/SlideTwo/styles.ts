@@ -1,18 +1,10 @@
 import styled from 'styled-components/native'
 
-export const Container = styled.View`
+export const Container = styled.SafeAreaView`
   flex: 1;
-`
-
-export const Content = styled.View`
-  flex: 1;
-  padding: 24px;
-`
-
-export const IconContainer = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
+  margin: 24px;
+  margin-bottom: 48px;
+  justify-content: flex-end;
 `
 
 export const InfoContainer = styled.View``
@@ -25,7 +17,7 @@ export const StepsContainer = styled.View`
 `
 
 export const Step = styled.View`
-  background-color: #dddddd;
+  background-color: ${({ theme }) => theme.gray[400]};
 
   width: 10px;
   height: 10px;
@@ -34,7 +26,7 @@ export const Step = styled.View`
 `
 
 export const CurrentStep = styled.View`
-  background-color: #bbbbbb;
+  background-color: ${({ theme }) => theme.gray[50]}
 
   width: 30px;
   height: 10px;

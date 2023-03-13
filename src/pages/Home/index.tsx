@@ -26,11 +26,11 @@ export function Home() {
         </InfoContainer>
 
         <ButtonsContainer>
+          <Button onPress={handleNavigateToSignIn}>Sign in</Button>
+
           <Button onPress={handleNavigateToSignUp} variant="secondary">
             Create an account
           </Button>
-
-          <Button onPress={handleNavigateToSignIn}>Sign in</Button>
         </ButtonsContainer>
       </Container>
     </BackgroundPattern>

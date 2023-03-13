@@ -16,13 +16,8 @@ export const UserContainer = styled.TouchableOpacity.attrs({
 })`
   flex-direction: row;
   align-items: center;
-`
 
-export const UserName = styled.Text`
-  font-family: 'Inter_600SemiBold';
-  font-size: 16px;
-  color: #000000;
-  margin-left: 12px;
+  gap: 12px;
 `
 
 export const Content = styled.ScrollView`

@@ -1,20 +1,33 @@
 import { useRef, useEffect, useCallback, useState } from 'react'
 import { TextInputProps as RNTextInputProps } from 'react-native'
 
+import { useTheme } from 'styled-components/native'
+
+import { Text } from '@components/Text'
 import { useField } from '@unform/core'
 
 import { Container, Error, Input } from './styles'
 
 type TextInputProps = {
   name: string
+  label?: string
 } & RNTextInputProps
 
-export function TextInput({ name, onChangeText, ...rest }: TextInputProps) {
+export function TextInput({
+  name,
+  onChangeText,
+  label,
+  ...rest
+}: TextInputProps) {
+  const theme = useTheme()
+
   const inputRef = useRef(null)
 
   const [isFocused, setIsFocused] = useState(false)
 
   const { fieldName, registerField, defaultValue, error } = useField(name)
+
+  const isErrored = !!error
 
   useEffect(() => {
     registerField({
@@ -57,13 +70,15 @@ export function TextInput({ name, onChangeText, ...rest }: TextInputProps) {
 
   return (
     <Container>
+      {label && <Text>{label}</Text>}
+
       <Input
         ref={inputRef}
         onChangeText={handleChangeText}
         defaultValue={defaultValue}
         isFocused={isFocused}
-        isErrored={!!error}
-        placeholderTextColor="#d9d9d9"
+        isErrored={isErrored}
+        placeholderTextColor={theme.placeholder}
         onFocus={handleFocus}
         onBlur={handleBlur}
         {...rest}

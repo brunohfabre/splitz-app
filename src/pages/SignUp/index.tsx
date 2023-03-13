@@ -77,17 +77,28 @@ export function SignUp() {
             onSubmit={handleSubmit}
             style={{ flex: 1, gap: 12 }}
           >
-            <TextInput name="name" placeholder="Name" />
+            <TextInput
+              name="name"
+              placeholder="Name"
+              autoCorrect={false}
+              label="Name"
+            />
             <TextInput
               name="email"
               placeholder="Email"
               autoCapitalize="none"
               autoCorrect={false}
+              label="Email"
             />
-            <PasswordInput name="password" placeholder="Password" />
+            <PasswordInput
+              name="password"
+              placeholder="Password"
+              label="Password"
+            />
             <PasswordInput
               name="passwordConfirmation"
               placeholder="Password confirmation"
+              label="Password confirmation"
             />
           </Form>
 

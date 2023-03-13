@@ -3,19 +3,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { toMoney } from 'vanilla-masker'
 
-import ArrowDown from '@assets/icons/ArrowDown.svg'
-import ArrowUp from '@assets/icons/ArrowUp.svg'
-import Bell from '@assets/icons/Bell.svg'
-import Percent from '@assets/icons/Percent.svg'
-import Plus from '@assets/icons/Plus.svg'
-import PlusAvatar from '@assets/icons/PlusAvatar.svg'
-import Users from '@assets/icons/Users.svg'
-import Wallet from '@assets/icons/Wallet.svg'
 import { Avatar } from '@components/Avatar'
-import { Button } from '@components/Button'
-import { Footer } from '@components/Footer'
 import { Heading } from '@components/Heading'
 import { IconButton } from '@components/IconButton'
+import { Bell, ArrowDown, ArrowUp, Plus, Percent } from '@components/icons'
 import { Text } from '@components/Text'
 import { useNavigation } from '@react-navigation/native'
 import { useBills } from '@services/bills'
@@ -23,6 +14,7 @@ import { useFriendships } from '@services/friendships'
 import { useAuthStore } from '@stores/authStore'
 import { getFirstAndLastName } from '@utils/getFirstAndLastName'
 
+import { Footer } from './Footer'
 import { Shimmer } from './Shimmer'
 import {
   AddFriendButtonAvatar,
@@ -44,7 +36,6 @@ import {
   SummaryContainer,
   SummaryContent,
   UserContainer,
-  UserName,
 } from './styles'
 
 export function Dashboard() {
@@ -87,10 +78,6 @@ export function Dashboard() {
     navigation.navigate('bills')
   }
 
-  function handleNavigateToBillValue() {
-    navigation.navigate('create-bill')
-  }
-
   function handleNavigateToFriendships() {
     navigation.navigate('friendships')
   }
@@ -106,11 +93,14 @@ export function Dashboard() {
           <UserContainer onPress={handleNavigateToProfile}>
             <Avatar sourceUri={user.avatarUrl} />
 
-            <UserName>{userShortName}</UserName>
+            <Heading>{userShortName}</Heading>
           </UserContainer>
 
-          <IconButton onPress={handleNavigateToNotifications}>
-            <Bell />
+          <IconButton
+            variant="secondary"
+            onPress={handleNavigateToNotifications}
+          >
+            <Bell size={16} color="white" weight="bold" />
           </IconButton>
         </Header>
       </SafeAreaView>
@@ -165,7 +155,7 @@ export function Dashboard() {
                   onPress={handleNavigateToAddFriend}
                 >
                   <AddFriendButtonAvatar>
-                    <PlusAvatar />
+                    <Plus size={16} />
                   </AddFriendButtonAvatar>
                   <Text size="sm" style={{ marginTop: 8, color: '#aaaaaa' }}>
                     Add
@@ -207,7 +197,7 @@ export function Dashboard() {
                         {bill.type === 'INCOME' && <ArrowDown />}
 
                         {bill.type === 'OUTCOME' && !bill.billUsers.length && (
-                          <ArrowUp />
+                          <ArrowUp size={16} />
                         )}
 
                         {bill.type === 'OUTCOME' && !!bill.billUsers.length && (
@@ -250,17 +240,7 @@ export function Dashboard() {
             </BillsContainer>
           </Content>
 
-          <Footer>
-            <Button onPress={handleNavigateToBills} block>
-              <Wallet />
-            </Button>
-            <Button onPress={handleNavigateToBillValue} block>
-              <Plus />
-            </Button>
-            <Button onPress={handleNavigateToFriendships} block>
-              <Users />
-            </Button>
-          </Footer>
+          <Footer />
         </>
       )}
     </Container>
